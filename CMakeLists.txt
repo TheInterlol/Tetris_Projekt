@@ -13,7 +13,7 @@ endif()
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 
-add_executable(Tetris main.c)
+add_executable(Tetris main.c game.c)
 
 target_link_libraries(Tetris PRIVATE 
     SDL2::SDL2

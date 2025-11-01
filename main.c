@@ -2,12 +2,8 @@
 #include <stdbool.h>
 #include <SDL.h>
 #include <SDL_image.h>
-
-//výška, šířka okna
-const int ScreenWidth = 1120;
-const int ScreenHeight = 840;
-
-const int TILE_SIZE = 40;
+#include "game.h"
+#include "renderer.h"
 
 //funkce pro error zprávy
 void log_sdl_error(const char *msg)
@@ -26,12 +22,10 @@ SDL_Texture *loadTexture(const char *file, SDL_Renderer *ren)
     return texture;
 }
 
-//funkce co vykresluje texturu
 void renderTexture(SDL_Texture *tex, SDL_Renderer *ren, SDL_Rect dst, SDL_Rect *clip){
-	SDL_RenderCopy(ren, tex, clip, &dst);
+    SDL_RenderCopy(ren, tex, clip, &dst);
 }
 
-//funkce co vykresluje texturu na danou pozici
 void renderTexturePreserveWH(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, SDL_Rect *clip)
 {
     SDL_Rect dst;
