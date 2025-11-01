@@ -78,4 +78,6 @@ Kód je rozdělen pro lepší přehlednost:
 
 **assets/**: Adresář pro herní data (obrázky, zvuky atd.).
 
+## Credits
+
 Licence Já :+1: (Ing. Bagr Křehňák)
