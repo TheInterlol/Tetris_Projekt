@@ -5,6 +5,11 @@
 #include "game.h"
 #include "renderer.h"
 
+SDL_Window *window;
+SDL_Renderer *renderer;
+SDL_Texture *background;
+SDL_Texture *image;
+
 //funkce pro error zprávy
 void log_sdl_error(const char *msg)
 {
@@ -43,38 +48,33 @@ void renderTexturePreserveWH(SDL_Texture *tex, SDL_Renderer *ren, int x, int y, 
     renderTexture(tex, ren, dst, clip);
 }
 
-int main(int argc, char **argv)
+void engine_inicializace(void)
 {
-
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
         log_sdl_error("SDL_Init");
-        return 1;
     }
     if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG)
     {
         log_sdl_error("IMG_Init");
         SDL_Quit();
-        return 1;
     }
 
-    SDL_Window *window = SDL_CreateWindow("Tetris.exe", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, ScreenWidth, ScreenHeight, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Tetris.exe", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, ScreenWidth, ScreenHeight, SDL_WINDOW_SHOWN);
     if (window == NULL)
     {
         log_sdl_error("SDL_CreateWindow");
         SDL_Quit();
-        return 1;
     }
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == NULL)
     {
         log_sdl_error("SDL_CreateRenderer");
         SDL_DestroyWindow(window);
         SDL_Quit();
-        return 1;
     }
-    SDL_Texture *background = loadTexture("assets/background.png", renderer);
-    SDL_Texture *image = loadTexture("assets/block1.png", renderer);
+    background = loadTexture("../assets/background.png", renderer);
+    image = loadTexture("../assets/block_red.png", renderer);
     
     if (background == NULL || image == NULL)
     {
@@ -84,53 +84,45 @@ int main(int argc, char **argv)
         SDL_DestroyWindow(window);
         IMG_Quit();
         SDL_Quit();
-        return 1;
     }
-    
-    int iW, iH;
-    SDL_QueryTexture(image, NULL, NULL, &iW, &iH);
-    int x = ScreenWidth / 2 - iW / 2;
-    int y = ScreenHeight / 2 - iH / 2;
-
-    SDL_Event e;
-    bool quit = false;
-    while (!quit)
-    {
-        while (SDL_PollEvent(&e))
-        {
-            if (e.type == SDL_QUIT)
-            {
-                quit = true;
-            }
-            if (e.type == SDL_KEYDOWN)
-            {
-                quit = true; 
-            }
-            if (e.type == SDL_MOUSEBUTTONDOWN)
-            {
-                quit = true;
-            }
-        }
-
-        //K vyčištění obrazovky
-        SDL_RenderClear(renderer);
-
-        //K vykreslení pozadí
-        SDL_Rect bgDst = {0, 0, ScreenWidth, ScreenHeight};
-        renderTexture(background, renderer, bgDst, NULL);
-
-        //K vykreslení obrázku na střed obrazovky
-        renderTexturePreserveWH(image, renderer, x, y, NULL);
-
-        //K zobrazení vykresleného obsahu
-        SDL_RenderPresent(renderer);
-    }
+}
+void clear_everything(void)
+{
     SDL_DestroyTexture(background);
     SDL_DestroyTexture(image);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     IMG_Quit();
     SDL_Quit();
+}   
+
+int main(int argc, char **argv)
+{
+
+    engine_inicializace();
+    game_init();
+    SDL_Event e;
+    bool quit = false;
+    while (!quit)
+    {
+        while(SDL_PollEvent(&e))
+        {
+            if (e.type == SDL_QUIT)
+            {
+                quit = true;
+            }
+
+            game_input(&e, &quit);
+        }
+
+        game_update();
+        //K vyčištění obrazovky
+        SDL_RenderClear(renderer);
+        game_render(renderer, background, image);
+        //K zobrazení vykresleného obsahu
+        SDL_RenderPresent(renderer);
+    }
+    clear_everything();
 
     return 0;
 }
