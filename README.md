@@ -3,7 +3,11 @@
 Jednoduchý klon hry Tetris napsaný v jazyce C s využitím knihoven SDL2, SDL2_image, SDL2_ttf a možná SDL2_audio. Tento projekt mi byl zadán jako "težší" cvičení v UPR.
 
 ## Náhled
-//screenshot ze hry jakmile bude ready
+![Hlavní menu hry](./assets/Screenshoty/Main_Menu_Screenshot.png)
+
+![Samotná hra](./assets/Screenshoty/Game_Screenshot.png)
+
+![Game Over](./assets/Screenshoty/Game_Over_Screenshot.png)
 
 ## Co jsem použil
 Jazyk: **C**
@@ -14,7 +18,11 @@ Knihovny:
 
 **SDL2_image**: Pro načítání textur (pozadí, bloky) ve formátu PNG.
 
-Build Systém: **CMake**
+**SDL2_TTF**: Pro vypisování textu (fontu) na výstup pomocí renderu.
+
+**SDL2_Mixer**: Pro soundtrack.
+
+**CMake** : Builder.
 
 ## Sestavení a Spuštění
 
@@ -62,7 +70,19 @@ Po instalaci závislostí lze projekt sestavit pomocí standardního CMake postu
 
     Šipka dolů: Urychlení pádu bloku
 
-    Šipka nahoru: Rotace bloku (bude implementováno)
+    Šipka nahoru: Rotace bloku
+
+    P: Pauza hry
+
+    R: Restart hry
+
+    C: Hold momentálního tetromina (jednou za kolo)
+
+    V Menu:
+
+    Enter: Spuštění hry
+
+    T: Zobrazení Top uložených Score
 
     Escape: Ukončení hry
 
@@ -76,8 +96,12 @@ Kód je rozdělen pro lepší přehlednost:
 
 **game.h / renderer.h**: Hlavičkové soubory, které definují rozhraní ("smlouvu") mezi enginem a herní logikou.
 
-**assets/**: Adresář pro herní data (obrázky, zvuky atd.).
+**mainmenu.c a mainmenu.h**: Soubory pro definici Hlavního Menu, Start a Top Score jsou kromě nádherného pozadí jediná věc, kterou zde uvidíte
+
+**game_over.c a game_over.h**: Soubory pro definici Game Over screenu. Ukazuje score a pokud to je či není nový rekord.
+
+**assets/**: Adresář pro herní data (obrázky, zvuky, fonty a soundtrack.).
 
 ## Credits
 
-Licence Já :+1: (Ing. Bagr Křehňák)
+Já :+1: (Ing. Bagr Křehňák)
